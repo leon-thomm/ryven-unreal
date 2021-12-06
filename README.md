@@ -1,4 +1,4 @@
-### UnrealEngine 4 Python Plugin for Ryven-like nodes editor
+### Ryven plugin for UE4
 
 This repo provides a small script to load [Ryven](https://github.com/leon-thomm/ryven) as a plugin inside Unreal Engine 4, as well as the nodes package. **Notice that there are no nodes at all available yet, because I don't know the Unreal Python API well.** If you do, please consider contributing.
 
