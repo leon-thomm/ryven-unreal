@@ -1,30 +1,31 @@
-import ryvencore_qt as rc
-from nodes.basic import export_nodes as nodes_basic
+from PySide2.QtWidgets import QApplication
 
-from os.path import abspath, dirname, join
-
-import unreal
-
-from PySide2.QtWidgets import QWidget, QHBoxLayout
-from PySide2.QtCore import Qt
+import ryven
+import sys
+from os.path import dirname, normpath, abspath, join
 
 
-class Editor(QWidget):
-    def __init__(self, parent=None):
-        super().__init__(parent)
+def init_editor():
 
-        self.session = rc.Session()
-        self.session.design.load_from_config(
-            abspath(join(dirname(__file__), 'styling/design_config.json'))
-        )
-        self.session.register_nodes(
-            nodes_basic
-        )
-        self.script = self.session.create_script(
-            title='main',
-            create_default_logs=False,
-            flow_view_size=[10000, 10000],
-        )
+    app = QApplication.instance()
+    if app is None:
+        app = QApplication(sys.argv)
 
-        self.setLayout(QHBoxLayout())
-        self.layout().addWidget(self.session.flow_views[self.script])
+    editor = ryven.run_ryven(
+        qt_app=app,
+        qt_api='pyside2',
+        show_dialog=False,
+        gui_parent=None,
+        window_title='Ryven Unreal',
+        window_theme_name='dark',
+        flow_theme='pure dark',
+    )
+    session = editor.session
+
+    loc = dirname(normpath(__file__))
+    p = join(loc, 'unreal_nodes')
+    editor.import_nodes(path=p)
+
+    session.create_script('main')
+
+    return editor, session
